@@ -39,41 +39,62 @@ public class WordSearch {
 
     // returns true if char is at location,
     // returns false quietly if location is not valid
-    private boolean charAtLocation(char[][] board, int x, int y, char c) {
+    private boolean charAtLocation(char[][] board, boolean[][] visited, int x, int y, char c) {
         if (y >= 0 && board.length > y && x >= 0 && board[y].length > x) {
-            if (board[y][x] == c) {
+            if (!visited[y][x] && board[y][x] == c) {
                 System.out.println("found char " + c + " at (" + x + "," + y + ")");
             }
-            return (board[y][x] == c);
+            return (!visited[y][x] && board[y][x] == c);
         }
         return false;
     }
 
-    private boolean existsAdjacentToLocation(char[][] board, int x, int y, String word) {
+    private boolean existsAdjacentToLocation(char[][] board, boolean[][] visited, int x, int y, String word) {
         if (board == null || board.length == 0 || word == null || word.length() == 0) {
             System.out.println("In location search, the board or word is empty, search cannot continue.");
             return false;
         }
+
+        // the first time we start looking at a location, we initialize the visited array
+        int height = board.length;
+        int width = board[0].length;
+        if (visited == null) {
+            // create visit flag array that keeps track of which squares are visited
+            visited = new boolean[height][width];   // java will initialize all cells to false
+        }
+//        else {
+//            System.out.println("exists check at " + x + "," + y + " and visited board is");
+//            for (int iy = 0; iy < height; iy++) {
+//                for (int ix = 0; ix < width; ix++) {
+//                    System.out.print(visited[iy][ix] + " ");
+//                }
+//                System.out.println();
+//            }
+//        }
+
+        // this square is being visited right now, make sure we never return to it
+        visited[y][x] = true;
+
         char wc = word.charAt(0);
 
         // search in square above this location
-        if (charAtLocation(board, x, y - 1, wc) &&
-                (word.length() == 1 || existsAdjacentToLocation(board, x, y - 1, word.substring(1)))) {
+        if (charAtLocation(board, visited, x, y - 1, wc) &&
+                (word.length() == 1 || existsAdjacentToLocation(board, visited, x, y - 1, word.substring(1)))) {
             return true;
         }
         // search in square right of this location
-        if (charAtLocation(board, x + 1, y, wc) &&
-                (word.length() == 1 || existsAdjacentToLocation(board, x + 1, y, word.substring(1)))) {
+        if (charAtLocation(board, visited, x + 1, y, wc) &&
+                (word.length() == 1 || existsAdjacentToLocation(board, visited, x + 1, y, word.substring(1)))) {
             return true;
         }
         // search in square below this location
-        if (charAtLocation(board, x, y + 1, wc) &&
-                (word.length() == 1 || existsAdjacentToLocation(board, x, y + 1, word.substring(1)))) {
+        if (charAtLocation(board, visited, x, y + 1, wc) &&
+                (word.length() == 1 || existsAdjacentToLocation(board, visited, x, y + 1, word.substring(1)))) {
             return true;
         }
         // search in square left of this location
-        if (charAtLocation(board, x - 1, y, wc) &&
-                (word.length() == 1 || existsAdjacentToLocation(board, x - 1, y, word.substring(1)))) {
+        if (charAtLocation(board, visited, x - 1, y, wc) &&
+                (word.length() == 1 || existsAdjacentToLocation(board, visited,x - 1, y, word.substring(1)))) {
             return true;
         }
 
@@ -92,7 +113,7 @@ public class WordSearch {
                 char b = board[y][x];
                 if (b  == wc) {
                     System.out.println("found char " + wc + " in board x=" + x + " and y=" + y);
-                    if (word.length() == 1 || existsAdjacentToLocation(board, x, y, word.substring(1))) {
+                    if (word.length() == 1 || existsAdjacentToLocation(board, null, x, y, word.substring(1))) {
                         return true;
                     }
                 }
