@@ -37,13 +37,10 @@
  */
 public class WordSearch {
 
-    // returns true if char is at location,
+    // returns true if the given location on the board is valid and the given char is found there,
     // returns false quietly if location is not valid
     private boolean charAtLocation(char[][] board, boolean[][] visited, int x, int y, char c) {
         if (y >= 0 && board.length > y && x >= 0 && board[y].length > x) {
-            if (!visited[y][x] && board[y][x] == c) {
-//                System.out.println("found char " + c + " at (" + x + "," + y + ")");
-            }
             return (!visited[y][x] && board[y][x] == c);
         }
         return false;
@@ -51,17 +48,17 @@ public class WordSearch {
 
     private boolean existsAdjacentToLocation(char[][] board, boolean[][] visited, int x, int y, String word) {
         if (board == null || board.length == 0 || word == null || word.length() == 0) {
-//            System.out.println("In location search, the board or word is empty, search cannot continue.");
+            System.out.println("In location search, the board or word is empty, search cannot continue.");
             return false;
         }
 
         // the first time we start looking at a location, we initialize the visited array,
-        // create a copy of the visit flag array that keeps track of which squares are visited
+        // otherwise, we create a copy of the visit flag array so that this new path can be
+        // searched without interfering with the searching on other paths the parent might explore
         int height = board.length;
         int width = board[0].length;
         boolean[][] copyOfVisited = new boolean[height][width];
         if (visited != null) {
-            // if there is already one, we need a copy of it
             for (int iy = 0; iy < height; iy++) {
                 for (int ix = 0; ix < width; ix++) {
                     copyOfVisited[iy][ix] = visited[iy][ix];
@@ -70,16 +67,8 @@ public class WordSearch {
         }
 
         // this square is being visited right now, make sure we never return to it
+        // during searches made by descendants
         copyOfVisited[y][x] = true;
-
-        // for debugging
-//        System.out.println("exists check at " + x + "," + y + " and visited board is");
-//        for (int iy = 0; iy < height; iy++) {
-//            for (int ix = 0; ix < width; ix++) {
-//                System.out.print(copyOfVisited[iy][ix] + " ");
-//            }
-//            System.out.println();
-//        }
 
         char wc = word.charAt(0);
 
@@ -109,7 +98,7 @@ public class WordSearch {
 
     public boolean exist(char[][] board, String word) {
         if (board == null || board.length == 0 || word == null || word.length() == 0) {
-//            System.out.println("The board or word is empty, no search is possible.");
+            System.out.println("The board or word is empty, no search is possible.");
             return false;
         }
 
@@ -118,7 +107,6 @@ public class WordSearch {
             for (int x = 0; x < board[y].length; x++) {
                 char b = board[y][x];
                 if (b  == wc) {
-//                    System.out.println("found char " + wc + " in board x=" + x + " and y=" + y);
                     if (word.length() == 1 || existsAdjacentToLocation(board, null, x, y, word.substring(1))) {
                         return true;
                     }
