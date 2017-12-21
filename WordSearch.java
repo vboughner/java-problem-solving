@@ -117,6 +117,53 @@ public class WordSearch {
         return false;
 	}
 
+	// exist2 methods are a re-do of the solution, attempting to do it in a more streamlined fashion
+    // after getting some new ideas by looking at other people's solutions,
+    // this way of doing it turns out to be faster because we don't create a visited array and copy it
+
+	private boolean exist2(char[][] board, int x, int y, char[] word, int index) {
+        if (index == word.length) {
+            // we've reached the end of the word, this was a successful search!
+            return true;
+        }
+        if (x < 0 || y < 0 || y >= board.length || x >= board[y].length) {
+            // ignore checks for locations off of the board
+            return false;
+        }
+        if (word[index] != board[y][x]) {
+            // this search fails if this location doesn't have the right character in it
+            return false;
+        }
+
+        // this changes the character on the board so that it cannot match again when
+        // our descendents are searching for a valid path
+        board[y][x] ^= 256;
+
+        // check all squares around us for valid paths
+        boolean retval = exist2(board, x, y - 1, word, index + 1) ||
+                exist2(board, x + 1, y, word, index + 1) ||
+                exist2(board, x, y + 1, word, index + 1) ||
+                exist2(board, x - 1, y, word, index + 1);
+
+        // this changes the character on the board back again,
+        // so that our caller isn't messed up when it tries looking down other paths
+        board[y][x] ^= 256;
+
+        return retval;
+    }
+
+	public boolean exist2(char[][] board, String word) {
+        char[] cword = word.toCharArray();
+        for (int y = 0; y < board.length; y++) {
+            for (int x = 0; x < board[y].length; x++) {
+                if (exist2(board, x, y, cword, 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         WordSearch ws = new WordSearch();
         char[][] board0 = {};
@@ -136,11 +183,19 @@ public class WordSearch {
         String word3 = "ABCB";
         String word4 = "ABCEFSADEESE";
 
-        System.out.println("RESULT A: " + ws.exist(board0, word1));
-        System.out.println("RESULT B: " + ws.exist(board1, word0));
-        System.out.println("RESULT C: " + ws.exist(board1, word1));
-        System.out.println("RESULT D: " + ws.exist(board1, word2));
-        System.out.println("RESULT E: " + ws.exist(board1, word3));
-        System.out.println("RESULT F: " + ws.exist(board2, word4));
+        // results for each combination is in this form - (what it should be): what it really is
+        System.out.println("RESULT 1A (false): " + ws.exist(board0, word1));
+        System.out.println("RESULT 1B (false): " + ws.exist(board1, word0));
+        System.out.println("RESULT 1C (true):  " + ws.exist(board1, word1));
+        System.out.println("RESULT 1D (true):  " + ws.exist(board1, word2));
+        System.out.println("RESULT 1E (false): " + ws.exist(board1, word3));
+        System.out.println("RESULT 1F (true):  " + ws.exist(board2, word4));
+        System.out.println();
+        System.out.println("RESULT 2A (false): " + ws.exist2(board0, word1));
+        System.out.println("RESULT 2B (true):  " + ws.exist2(board1, word0));
+        System.out.println("RESULT 2C (true):  " + ws.exist2(board1, word1));
+        System.out.println("RESULT 2D (true):  " + ws.exist2(board1, word2));
+        System.out.println("RESULT 2E (false): " + ws.exist2(board1, word3));
+        System.out.println("RESULT 2F (true):  " + ws.exist2(board2, word4));
     }
 }
