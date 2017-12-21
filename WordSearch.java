@@ -42,7 +42,7 @@ public class WordSearch {
     private boolean charAtLocation(char[][] board, boolean[][] visited, int x, int y, char c) {
         if (y >= 0 && board.length > y && x >= 0 && board[y].length > x) {
             if (!visited[y][x] && board[y][x] == c) {
-                System.out.println("found char " + c + " at (" + x + "," + y + ")");
+//                System.out.println("found char " + c + " at (" + x + "," + y + ")");
             }
             return (!visited[y][x] && board[y][x] == c);
         }
@@ -51,50 +51,56 @@ public class WordSearch {
 
     private boolean existsAdjacentToLocation(char[][] board, boolean[][] visited, int x, int y, String word) {
         if (board == null || board.length == 0 || word == null || word.length() == 0) {
-            System.out.println("In location search, the board or word is empty, search cannot continue.");
+//            System.out.println("In location search, the board or word is empty, search cannot continue.");
             return false;
         }
 
-        // the first time we start looking at a location, we initialize the visited array
+        // the first time we start looking at a location, we initialize the visited array,
+        // create a copy of the visit flag array that keeps track of which squares are visited
         int height = board.length;
         int width = board[0].length;
-        if (visited == null) {
-            // create visit flag array that keeps track of which squares are visited
-            visited = new boolean[height][width];   // java will initialize all cells to false
+        boolean[][] copyOfVisited = new boolean[height][width];
+        if (visited != null) {
+            // if there is already one, we need a copy of it
+            for (int iy = 0; iy < height; iy++) {
+                for (int ix = 0; ix < width; ix++) {
+                    copyOfVisited[iy][ix] = visited[iy][ix];
+                }
+            }
         }
-//        else {
-//            System.out.println("exists check at " + x + "," + y + " and visited board is");
-//            for (int iy = 0; iy < height; iy++) {
-//                for (int ix = 0; ix < width; ix++) {
-//                    System.out.print(visited[iy][ix] + " ");
-//                }
-//                System.out.println();
-//            }
-//        }
 
         // this square is being visited right now, make sure we never return to it
-        visited[y][x] = true;
+        copyOfVisited[y][x] = true;
+
+        // for debugging
+//        System.out.println("exists check at " + x + "," + y + " and visited board is");
+//        for (int iy = 0; iy < height; iy++) {
+//            for (int ix = 0; ix < width; ix++) {
+//                System.out.print(copyOfVisited[iy][ix] + " ");
+//            }
+//            System.out.println();
+//        }
 
         char wc = word.charAt(0);
 
         // search in square above this location
-        if (charAtLocation(board, visited, x, y - 1, wc) &&
-                (word.length() == 1 || existsAdjacentToLocation(board, visited, x, y - 1, word.substring(1)))) {
+        if (charAtLocation(board, copyOfVisited, x, y - 1, wc) &&
+                (word.length() == 1 || existsAdjacentToLocation(board, copyOfVisited, x, y - 1, word.substring(1)))) {
             return true;
         }
         // search in square right of this location
-        if (charAtLocation(board, visited, x + 1, y, wc) &&
-                (word.length() == 1 || existsAdjacentToLocation(board, visited, x + 1, y, word.substring(1)))) {
+        if (charAtLocation(board, copyOfVisited, x + 1, y, wc) &&
+                (word.length() == 1 || existsAdjacentToLocation(board, copyOfVisited, x + 1, y, word.substring(1)))) {
             return true;
         }
         // search in square below this location
-        if (charAtLocation(board, visited, x, y + 1, wc) &&
-                (word.length() == 1 || existsAdjacentToLocation(board, visited, x, y + 1, word.substring(1)))) {
+        if (charAtLocation(board, copyOfVisited, x, y + 1, wc) &&
+                (word.length() == 1 || existsAdjacentToLocation(board, copyOfVisited, x, y + 1, word.substring(1)))) {
             return true;
         }
         // search in square left of this location
-        if (charAtLocation(board, visited, x - 1, y, wc) &&
-                (word.length() == 1 || existsAdjacentToLocation(board, visited,x - 1, y, word.substring(1)))) {
+        if (charAtLocation(board, copyOfVisited, x - 1, y, wc) &&
+                (word.length() == 1 || existsAdjacentToLocation(board, copyOfVisited,x - 1, y, word.substring(1)))) {
             return true;
         }
 
@@ -103,7 +109,7 @@ public class WordSearch {
 
     public boolean exist(char[][] board, String word) {
         if (board == null || board.length == 0 || word == null || word.length() == 0) {
-            System.out.println("The board or word is empty, no search is possible.");
+//            System.out.println("The board or word is empty, no search is possible.");
             return false;
         }
 
@@ -112,7 +118,7 @@ public class WordSearch {
             for (int x = 0; x < board[y].length; x++) {
                 char b = board[y][x];
                 if (b  == wc) {
-                    System.out.println("found char " + wc + " in board x=" + x + " and y=" + y);
+//                    System.out.println("found char " + wc + " in board x=" + x + " and y=" + y);
                     if (word.length() == 1 || existsAdjacentToLocation(board, null, x, y, word.substring(1))) {
                         return true;
                     }
@@ -131,15 +137,22 @@ public class WordSearch {
                 {'S', 'F', 'C', 'S'},
                 {'A', 'D', 'E', 'E'}
         };
+        char[][] board2 = {
+                {'A', 'B', 'C', 'E'},
+                {'S', 'F', 'E', 'S'},
+                {'A', 'D', 'E', 'E'}
+        };
         String word0 = "";
         String word1 = "ABCCED";
         String word2 = "SEE";
         String word3 = "ABCB";
+        String word4 = "ABCEFSADEESE";
 
-        System.out.println(ws.exist(board0, word1));
-        System.out.println(ws.exist(board1, word0));
-        System.out.println(ws.exist(board1, word1));
-        System.out.println(ws.exist(board1, word2));
-        System.out.println(ws.exist(board1, word3));
+        System.out.println("RESULT A: " + ws.exist(board0, word1));
+        System.out.println("RESULT B: " + ws.exist(board1, word0));
+        System.out.println("RESULT C: " + ws.exist(board1, word1));
+        System.out.println("RESULT D: " + ws.exist(board1, word2));
+        System.out.println("RESULT E: " + ws.exist(board1, word3));
+        System.out.println("RESULT F: " + ws.exist(board2, word4));
     }
 }
