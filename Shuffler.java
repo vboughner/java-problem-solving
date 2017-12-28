@@ -1,7 +1,7 @@
 import java.lang.StringBuilder;
 
 public class Shuffler {
-    public static String CONSONENTS = "bcdfghjklmnpqrstvwxyz";
+    public static String CONSONANTS = "bcdfghjklmnpqrstvwxyz";
     public static String VOWELS = "aeiou";
 
     /*
@@ -32,7 +32,7 @@ public class Shuffler {
         Shuffler shuf = new Shuffler();
 
         for (int i = 0; i < 10; i++) {
-            String result = shuf.shuffleIntoString("", shuf.CONSONENTS, 5);
+            String result = shuf.shuffleIntoString("", shuf.CONSONANTS, 5);
             result = shuf.shuffleIntoString(result, shuf.VOWELS, 5);
             System.out.println(result);
         }
