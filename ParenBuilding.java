@@ -66,7 +66,7 @@ public class ParenBuilding {
 
     public List<String> generateParenthesis(int n) {
         List<String> results = new ArrayList<String>();
-        // there are always m left parens and n right parens
+        // there are always n left parens and n right parens
         helper(results, "", n, n);
         return results;
     }
