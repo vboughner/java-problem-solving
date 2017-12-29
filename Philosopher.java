@@ -1,6 +1,5 @@
-import java.lang.Thread;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -87,8 +86,8 @@ public class Philosopher extends Thread {
     public static void main(String[] args) {
         int numSticks = 10;
         int numPhilosophers = 10;
-        List<Chopstick> chopsticks = new ArrayList<Chopstick>(numSticks);
-        List<Philosopher> philosophers = new ArrayList<Philosopher>(numPhilosophers);
+        List<Chopstick> chopsticks = new ArrayList<>(numSticks);
+        List<Philosopher> philosophers = new ArrayList<>(numPhilosophers);
 
         for (int i = 0; i < numSticks; i++) {
             chopsticks.add(new Chopstick(i));
