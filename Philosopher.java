@@ -9,8 +9,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * circular table, there is a chopstick between each of them. A philosopher needs both chopsticks to eat.
  *
  * In the initial, simple solution, the philosophers always pick up the left chopstick before the right one,
- * and this could result in a deadlock.  I have updated the code below so that each philosoper tries to pick
- * up the lower numbered chopstick first.  This means all philosphers will still pick up the left chopstick
+ * and this could result in a deadlock.  I have updated the code below so that each philosopher tries to pick
+ * up the lower numbered chopstick first.  This means all philosophers will still pick up the left chopstick
  * first, except for the last (highest numbered) philosopher, who will pick up the right one first (because
  * it is number 0 and is the lower numbered one).
  */
@@ -81,6 +81,7 @@ public class Philosopher extends Thread {
         for (int i = 0; i < bites; i++) {
             eat();
         }
+        System.out.println("philosopher " + id + " is full");
     }
 
     public static void main(String[] args) {
@@ -102,5 +103,7 @@ public class Philosopher extends Thread {
         for (int i = 0; i < numPhilosophers; i++) {
             philosophers.get(i).start();
         }
+
+        System.out.println("done starting threads");
     }
 }
