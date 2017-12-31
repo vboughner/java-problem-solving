@@ -21,6 +21,7 @@ public class DynamicProgramming {
         memo.put(1, 0);
     }
 
+    // top-down approach, or "memoization"
     public int numSteps(int n) {
         if (n < 1) {
             System.out.println("Error: numSteps called with n less than 1");
@@ -48,12 +49,26 @@ public class DynamicProgramming {
         return result;
     }
 
+    // bottom-up approach, or "dynamic programming", notice that we don't need recursion (saves stack space)
+    public int numStepsDP(int n) {
+        int[] dp = new int[n+1];
+        dp[1] = 0;  // trivial case
+
+        for (int i = 2; i <= n; i ++) {
+            dp[i] = 1 + dp[i - 1];
+            if (i % 2 == 0) dp[i] = Math.min(dp[i], 1 + dp[i/2]);
+            if (i % 3 == 0) dp[i] = Math.min(dp[i], 1 + dp[i/3]);
+        }
+
+        return dp[n];
+    }
 
     public static void main(String[] args) {
         DynamicProgramming dp = new DynamicProgramming();
 
+        // run the two methods side-by-side so we can compare the results (which should be the same)
         for (int i = 1; i < 25; i++) {
-            System.out.println(i + ": " + dp.numSteps(i));
+            System.out.println(i + ": " + dp.numSteps(i) + ", " + dp.numStepsDP(i));
         }
     }
 }
