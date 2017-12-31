@@ -19,23 +19,22 @@ import java.util.ArrayList;
 public class WordBreak {
 
     public boolean wordBreak(String s, List<String> wordDict) {
-        int takeLen = s.length();
-        while (takeLen > 0) {
-            String firstPart = s.substring(0, takeLen);
+        int firstPartLen = 1;
+        while (firstPartLen < s.length()) {
+            String firstPart = s.substring(0, firstPartLen);
+            System.out.print("first part is '" + firstPart + "' and... ");
             if (wordDict.contains(firstPart)) {
-                if (takeLen == s.length()) {
+                String secondPart = s.substring(firstPartLen);
+                System.out.println("second part is '" + secondPart + "'");
+                if (wordBreak(secondPart, wordDict)) {
+                    System.out.println(" returning true");
                     return true;
                 }
-                else {
-                    String secondPart = s.substring(takeLen);
-                    if (wordBreak(secondPart, wordDict)) {
-                        return true;
-                    }
-                }
             }
-            takeLen--;
+            System.out.println(" keep looking");
+            firstPartLen++;
         }
-        return false;
+        return wordDict.contains(s);
     }
 
     public static void main(String args[]) {
