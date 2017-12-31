@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
-
+import java.util.Set;
+import java.util.HashSet;
 
 /*
   https://leetcode.com/problems/word-break/description/
@@ -18,15 +19,15 @@ import java.util.ArrayList;
  */
 public class WordBreak {
 
-    public boolean wordBreak(String s, List<String> wordDict) {
+    private boolean wordBreakHelper(String s, Set<String> wordSet) {
         int firstPartLen = 1;
         while (firstPartLen < s.length()) {
             String firstPart = s.substring(0, firstPartLen);
             System.out.print("first part is '" + firstPart + "' and... ");
-            if (wordDict.contains(firstPart)) {
+            if (wordSet.contains(firstPart)) {
                 String secondPart = s.substring(firstPartLen);
                 System.out.println("second part is '" + secondPart + "'");
-                if (wordBreak(secondPart, wordDict)) {
+                if (wordBreakHelper(secondPart, wordSet)) {
                     System.out.println(" returning true");
                     return true;
                 }
@@ -34,7 +35,16 @@ public class WordBreak {
             System.out.println(" keep looking");
             firstPartLen++;
         }
-        return wordDict.contains(s);
+        return wordSet.contains(s);
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> wordSet = new HashSet<String>();
+        for (String word : wordDict) {
+            wordSet.add(word);
+        }
+
+        return wordBreakHelper(s, wordSet);
     }
 
     public static void main(String args[]) {
