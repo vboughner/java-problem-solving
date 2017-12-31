@@ -20,22 +20,19 @@ import java.util.HashSet;
 public class WordBreak {
 
     private boolean wordBreakHelper(String s, Set<String> wordSet) {
-        int firstPartLen = 1;
-        while (firstPartLen < s.length()) {
-            String firstPart = s.substring(0, firstPartLen);
-            System.out.print("first part is '" + firstPart + "' and... ");
-            if (wordSet.contains(firstPart)) {
-                String secondPart = s.substring(firstPartLen);
-                System.out.println("second part is '" + secondPart + "'");
-                if (wordBreakHelper(secondPart, wordSet)) {
-                    System.out.println(" returning true");
-                    return true;
+        int len = s.length();
+        boolean[] firstPartWorks = new boolean[len + 1];
+        firstPartWorks[0] = true;
+        for (int i = 1; i < len + 1; i++) {
+            for (int j = 0; j < i; j++) {
+                // if we can string together two words, we know that firstPart of greater length works
+                if (firstPartWorks[j] && wordSet.contains(s.substring(j, i))) {
+                    firstPartWorks[i] = true;   // cache it
+                    break;
                 }
             }
-            System.out.println(" keep looking");
-            firstPartLen++;
         }
-        return wordSet.contains(s);
+        return firstPartWorks[len];
     }
 
     public boolean wordBreak(String s, List<String> wordDict) {
