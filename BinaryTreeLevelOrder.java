@@ -1,5 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Queue;
+import java.util.LinkedList;
 
 /*
 
@@ -86,6 +88,35 @@ public class BinaryTreeLevelOrder {
         return results;
     }
 
+
+    public List<List<Integer>> levelOrderWithQueue(TreeNode root) {
+        List<List<Integer>> results = new ArrayList<List<Integer>>();
+        if (root != null) {
+            Queue<TreeNode> queue = new LinkedList<TreeNode>();
+            queue.offer(root);
+            while (!queue.isEmpty()) {
+                int qsize = queue.size();  // number of nodes at this level of depth
+                List<Integer> nodesAtLevelList = new ArrayList<Integer>();
+
+                // add all nodes at this level to the new list, that will become part of the results
+                for (int i = 0; i < qsize; i++) {
+                    TreeNode node = queue.poll();
+                    nodesAtLevelList.add(node.val);
+
+                    // offer nodes at the next level to the queue, for the next time we start the while loop
+                    if (node.left != null) {
+                        queue.offer(node.left);
+                    }
+                    if (node.right != null) {
+                        queue.offer(node.right);
+                    }
+                }
+                results.add(nodesAtLevelList);
+            }
+        }
+        return results;
+    }
+
     public static void main(String[] args) {
         BinaryTreeLevelOrder btlo = new BinaryTreeLevelOrder();
         TreeNode tree1 = new TreeNode(3);
@@ -98,6 +129,7 @@ public class BinaryTreeLevelOrder {
         TreeNode right2 = new TreeNode(7);
         right1.right = right2;
 
-        System.out.println(btlo.levelOrder(tree1));
+        System.out.println("BFS (with recursion): " + btlo.levelOrder(tree1));
+        System.out.println("    DFS (with queue): " + btlo.levelOrderWithQueue(tree1));
     }
 }
