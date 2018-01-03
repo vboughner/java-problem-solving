@@ -82,11 +82,15 @@ public class LongestPalindromicSubstring {
         String case4 = "a";
         String case5 = "ff";
         String case6 = "fafghjfafj";
+        String case7 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         System.out.println("result for '" + case1 + "' is '" + lps.longestPalindrome(case1) + "' and should be 'bab' or 'aba'");
         System.out.println("result for '" + case2 + "' is '" + lps.longestPalindrome(case2) + "' and should be 'bb'");
         System.out.println("result for '" + case3 + "' is '" + lps.longestPalindrome(case3) + "' and should be ''");
         System.out.println("result for '" + case4 + "' is '" + lps.longestPalindrome(case4) + "' and should be 'a'");
         System.out.println("result for '" + case5 + "' is '" + lps.longestPalindrome(case5) + "' and should be 'ff'");
         System.out.println("result for '" + case6 + "' is '" + lps.longestPalindrome(case6) + "' and should be 'jfafj'");
+        System.out.println("result for '" + case7 + "' is");
+        System.out.println("           '" + lps.longestPalindrome(case7) + "' and");
+        System.out.println("should be  '" + case7 + "'");
     }
 }
