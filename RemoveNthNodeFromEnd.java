@@ -17,10 +17,10 @@
  Try to do this in one pass.
 
  * Algorithm:
+ * add a dummy node to the front of the list to make handling corner cases easier,
  * run two pointers, one that follows n nodes behind the other
- * and keeps track of the one that n nodes behind the current one,
- * to deal with the beginning of the list, count how many nodes we pass,
- * and use the head to get going once we pass n nodes
+ * and keeps track of the node that is n + 1 nodes behind the current one,
+ * at the end, remove the nth node by linking the n-1 node to the n+1 node
  */
 
 // definition for singly-linked list
@@ -32,36 +32,31 @@ class ListNode {
 
 class RemoveNthNodeFromEnd {
     public ListNode removeNthFromEnd(ListNode head, int n) {
-        ListNode nthFromEndPrev = head, nthFromEndNext = head; // nthFromEnd is the node to remove
-        ListNode current = head;
-        int count = 0;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode front = dummy, behind = dummy;
 
-        while (current != null) {
-            count++;
-            if (count >= n) {
-                nthFromEndNext = nthFromEndNext.next;
-            }
-            if (count > n + 1) {
-                nthFromEndPrev = nthFromEndPrev.next;
-            }
-            current = current.next;
+        // assumption: n is always valid (otherwise we'd put some error detection in here)
+
+        // move the front pointer n nodes ahead
+        for (int i = 0; i < n; i++) {
+            front = front.next;
         }
 
-        if (count < n) {
-            System.out.println("Error: there are not at least n nodes");
-            return head;
+        // continue, while moving both nodes, until we read the end
+        while (front.next != null) {
+            front = front.next;
+            behind = behind.next;
+        }
 
-        }
-        else if (count == n) {
-            return head.next;
-        }
-        else {
-            nthFromEndPrev.next = nthFromEndNext;
-            return head;
-        }
+        // remove the node
+        behind.next = behind.next.next;
+        return dummy.next;
     }
 
     public static void main(String[] args) {
+        RemoveNthNodeFromEnd rnfe = new RemoveNthNodeFromEnd();
+
         ListNode one = new ListNode(1);
         ListNode two = new ListNode(2);
         ListNode three = new ListNode(3);
@@ -72,9 +67,19 @@ class RemoveNthNodeFromEnd {
         three.next = four;
         four.next = five;
 
-        RemoveNthNodeFromEnd rnfe = new RemoveNthNodeFromEnd();
+
         ListNode result = rnfe.removeNthFromEnd(one, 2);
         ListNode current = result;
+        System.out.print("[ ");
+        while (current != null) {
+            System.out.print(current.val + " ");
+            current = current.next;
+        }
+        System.out.println("]");
+
+
+        result = rnfe.removeNthFromEnd(five, 1);
+        current = result;
         System.out.print("[ ");
         while (current != null) {
             System.out.print(current.val + " ");
