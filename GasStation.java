@@ -35,32 +35,35 @@ stations.
 Addendum: this still doesn't work if the station you need to start at is the last
 one on the list (see case12 in the tests.  So I need to go looking in the
 discussion for a hint and I'll come back to this.
+
+After looking at hint: I see it can be done in O(n) nearly the way I was doing it,
+but I needed to add a double check but passing through everything twice, so that
+the effectiveness of the path is verified.  Whenever the surplus is less than zero
+at a station, you give up and try starting at the next station instead.
+This works correctly for case12, whereas the other way did not.
+Thanks goes to this discussion topic:
+https://leetcode.com/problems/gas-station/discuss/42600
 */
 public class GasStation {
 
     public int canCompleteCircuit(int[] gas, int[] cost) {
-        int totalGas = 0;
-        int totalCost = 0;
-        int maxSurplusAmount = 0;
-        int maxSurplusStation = 0;
+        int currentSurplus = 0;
+        int currentStartStation = 0;
+        int numStations = gas.length;
 
-        for (int i = 0; i < gas.length; i++) {
-            totalGas += gas[i];
-            totalCost += cost[i];
-
-            int surplusHere = gas[i] - cost[i];
-            if (surplusHere > maxSurplusAmount) {
-                maxSurplusAmount = surplusHere;
-                maxSurplusStation = i;
+        for (int i = 0; i < numStations * 2 - 1; i++) {
+            int surplusHere = gas[i % numStations] - cost[i % numStations];
+            currentSurplus += surplusHere;
+            if (currentSurplus < 0) {
+                currentStartStation = i + 1;
+                if (currentStartStation >= numStations) {
+                    return -1;
+                }
+                currentSurplus = 0;
             }
         }
 
-        if (totalGas < totalCost) {
-            return -1;
-        }
-        else {
-            return maxSurplusStation;
-        }
+        return currentStartStation;
     }
 
     public int canCompleteCircuitBruteForce(int[] gas, int[] cost) {
