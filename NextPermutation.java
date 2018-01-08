@@ -15,6 +15,30 @@ Here are some examples. Inputs are in the left-hand column and its corresponding
 3,2,1 → 1,2,3
 1,1,5 → 1,5,1
 
+Notes:
+  - each instance of number may only be used once
+  - multiple instances of a number are equivalent
+  - lexicographically lowest numbers have lowest numbers on the right
+  - highest arrangements have the highest numbers on the left
+  - requirement to re-arrange in-place is a clue it can be done with extra data structures
+  - this is essentially like incrementing a counter (with limits on how you can do it, because you can't reuse something)
+  - if what increment results in the same arrangement (because of duplicate digits), increment again
+  - if incrementing isn't possible, roll the entire sequence and make it the lowest possible number arrangement
+  - the lowest number arrangement is the reverse of the highest number arrangement
+
+  full count:  1,2,3 -> 1,3,2 -> 2,1,3 -> 2,3,1 -> 3,1,2 -> 3,2,1
+               (swaps 3 and 2)
+                        (swaps 2 and 3)
+                        (swaps 2 and 1)
+                                 (swaps 3 and 1)
+                                          (swaps 3 and 2)
+                                          (swaps 1 and 2)
+                                                   (swaps 2 and 1)
+
+  - all steps appear to be swapping two digists that are next to each other
+  - but sometimes you aren't starting with the lowest pair
+
+  - will need to think about this some more...
 */
 public class NextPermutation {
     private static String arrayToString(int[] a) {
