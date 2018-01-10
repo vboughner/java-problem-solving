@@ -37,10 +37,27 @@ Notes:
 
   - all steps appear to be swapping two digists that are next to each other
   - but sometimes you aren't starting with the lowest pair
-
   - will need to think about this some more...
+
+  - I got a hint about the algorithm from the discussions (but didn't look at the code),
+    and can now outline how I'm going to solve this...
+
+Algorithm:
+  - starting from right to left, look for the first number that is not ascending,
+    like the 3 in: 5,3,4,2,1
+  - if there is no such number, then we're at the highest permutation, such as 5,4,3,2,1,
+    and we need to simply reverse the entire order (in-place)
+  - if there was a number (like 3 above), then we need to increment the permutation by one, thusly...
+  - starting from right to left, look for the first number that is bigger than that 3
+    (in 5,3,4,2,1 it would be the 4)
+  - swap those two numbers (making the minimal upward adjustment at the 3's position)
+    (that would make the number 5,4,3,2,1)
+  - reverse all the numbers to the right of 3 (putting it as low as it can be)
+    (that would make the number 5,4,1,2,3)
+  - return the result
 */
 public class NextPermutation {
+
     private static String arrayToString(int[] a) {
         StringBuilder sb = new StringBuilder();
         sb.append("[ ");
@@ -51,8 +68,56 @@ public class NextPermutation {
         return sb.toString();
     }
 
+    // reverse all elements between and including the startIndex and endIndex
+    private void reversePartOfArray(int[] nums, int startIndex, int endIndex) {
+        int len = endIndex - startIndex + 1;
+        // System.out.println("swap subset length is " + len);
+        if (len > 1) {
+            for (int i = 0; i < len / 2; i++) {
+                int tmp = nums[startIndex + i];
+                nums[startIndex + i] = nums[endIndex - i];
+                nums[endIndex - i] = tmp;
+            }
+        }
+    }
+
     public void nextPermutation(int[] nums) {
-        // TODO: implement
+        // look for first number that is not ascending
+        int len = nums.length;
+        int currentColumn = len - 1;
+        for (int i = len - 2; i >= 0; i--) {
+            // System.out.println("i=" + i + ", nums[i]=" + nums[i] + ", nums[currentColumn]=" + nums[currentColumn]);
+            if (nums[i] < nums[i + 1]) {
+                currentColumn = i;
+                // System.out.println("current column is " + i);
+                break;
+            }
+        }
+        if (currentColumn == len - 1) {
+            // there was no such number, reverse everything and return
+            // System.out.println("no number not ascending, reversing everything");
+            reversePartOfArray(nums, 0, len - 1);
+            return;
+        }
+        else {
+            // System.out.println("First number not ascending is in column " + currentColumn);
+        }
+
+        // for the number, from the right, that is bigger than it, and we can swap with that one
+        for (int i = len - 1; i > currentColumn; i--) {
+            if (nums[i] > nums[currentColumn]) {
+                // we found it!  make the swap
+                // System.out.println("we found it, make the swap at column " + i);
+                int tmp = nums[currentColumn];
+                nums[currentColumn] = nums[i];
+                nums[i] = tmp;
+
+                // and reverse everything after the original column
+                reversePartOfArray(nums, currentColumn + 1, len - 1);
+                return;
+            }
+        }
+        System.out.println("Error: we should not reach this point");
     }
 
     public static void main(String[] args) {
@@ -67,6 +132,12 @@ public class NextPermutation {
         int[] input3 =    { 1, 1, 5 };
         int[] solution3 = { 1, 5, 1 };
 
+        int[] input4 =    { 2, 3, 1 };
+        int[] solution4 = { 3, 1, 2 };
+
+        int[] input5 =    { 5, 1, 1 };
+        int[] solution5 = { 1, 1, 5 };
+
         System.out.print(arrayToString(input1) + " -> ");
         np.nextPermutation(input1);
         System.out.println(arrayToString(input1) + " (should be " + arrayToString(solution1) + ")");
@@ -78,5 +149,13 @@ public class NextPermutation {
         System.out.print(arrayToString(input3) + " -> ");
         np.nextPermutation(input3);
         System.out.println(arrayToString(input3) + " (should be " + arrayToString(solution3) + ")");
+
+        System.out.print(arrayToString(input4) + " -> ");
+        np.nextPermutation(input4);
+        System.out.println(arrayToString(input4) + " (should be " + arrayToString(solution4) + ")");
+
+        System.out.print(arrayToString(input5) + " -> ");
+        np.nextPermutation(input5);
+        System.out.println(arrayToString(input5) + " (should be " + arrayToString(solution5) + ")");
     }
 }
