@@ -26,12 +26,13 @@ public class ValidSudoku {
             System.out.println("Error: row or column out of bounds");
             return false;
         }
+        // System.out.println("check isValidNine for startColumn=" + startColumn + ", startRow=" + startRow + ", endColumn=" + endColumn + ", endRow=" + endRow);
         boolean[] digitUsed = new boolean[10];  // all start as false
         for (int row = startRow; row <= endRow; row++) {
             for (int column = startColumn; column <= endColumn; column++) {
                 if (board[row][column] != '.') {
                     int digit = board[row][column] - '0';
-                    // System.out.println('row ' + row + ', column ' + column + ', digit ' + digit + ', isDigitUsed ' + digitUsed[digit]);
+                    // System.out.println("row " + row + ", column " + column + ", digit " + digit + ", isDigitUsed " + digitUsed[digit]);
                     if (digitUsed[digit]) {
                         // already used once, so this is invalid
                         return false;
@@ -45,16 +46,16 @@ public class ValidSudoku {
 
     public boolean isValidSudoku(char[][] board) {
         // check rows and columns
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i <= 8; i++) {
             if (!isValidNine(board, 0, i, 8, i) ||
                     !isValidNine(board, i, 0, i, 8)) {
                 return false;
             }
         }
 
-        // check the nice boxes
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        // check the nine boxes
+        for (int i = 0; i <= 2; i++) {
+            for (int j = 0; j <= 2; j++) {
                 if (!isValidNine(board, i * 3, j * 3, i * 3 + 2, j * 3 + 2)) {
                     return false;
                 }
