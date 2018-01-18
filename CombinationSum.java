@@ -41,6 +41,7 @@ Brute Force Algorithm:
   - if less than the target, re-call this method again with a lower target number and use
     all the sub-solutions as part of a solution involving that number
   - save all the solutions for this target for re-use
+  - anything that was used in a solution should be marked for non-reuse in next loops
 
 How to make this faster, use dynamic programming, and save the solutions as we find them.
 */
@@ -48,29 +49,34 @@ How to make this faster, use dynamic programming, and save the solutions as we f
 public class CombinationSum {
     private List<List<Integer>> comboSumHelper(Map<Integer, List<List<Integer>>> memory, int[] candidates, int target) {
         List<List<Integer>> result = memory.get(target);
+        Map<Integer,Boolean> usedThisTime = new HashMap<Integer,Boolean>();
+
         if (result == null) {
             result = new ArrayList<List<Integer>>();
             for (int i = 0; i < candidates.length; i++) {
-                if (candidates[i] > target) {
-                    // do nothing
-                }
-                else if (candidates[i] == target) {
-                    // add this to the results
+                int candi = candidates[i];
+                if (candi == target) {
+                    // add this single number to the results, it is alone
                     List<Integer> l = new ArrayList<Integer>();
-                    l.add(candidates[i]);
+                    l.add(candi);
                     result.add(l);
                 }
-                else if (candidates[i] > target / 2) {
-                    // do nothing (this eliminates some of the duplicates)
+                else if (candi > target || usedThisTime.containsKey(candi)) {
+                    // do nothing, eliminates some extra work and the re-use of some combos
                 }
                 else {
-                    // less than the target, grab sub-solutions and use those
-                    List<List<Integer>> sublist = comboSumHelper(memory, candidates, target - candidates[i]);
+                    // make sure we don't re-use (later in this loop) any of the numbers we've already tried,
+                    // and this will eliminate duplicates
+                    usedThisTime.put(candi, true);
+
+                    // when less than the target, use this number and grab sub-solutions on a smaller target
+                    List<List<Integer>> sublist = comboSumHelper(memory, candidates, target - candi);
                     for (int j = 0; j < sublist.size(); j++) {
-                        List<Integer> sl = new ArrayList<Integer>();
-                        sl.add(candidates[i]);
-                        sl.addAll(sublist.get(j));
-                        result.add(sl);
+                        List<Integer> subsolution = sublist.get(j);
+                        List<Integer> additionalResult = new ArrayList<Integer>();
+                        additionalResult.add(candi);
+                        additionalResult.addAll(subsolution);
+                        result.add(additionalResult);
                     }
                 }
             }
@@ -86,8 +92,15 @@ public class CombinationSum {
 
     public static void main(String[] arg) {
         CombinationSum cs = new CombinationSum();
-        int[] candidates = { 2, 3, 6, 7 };
+        int[] candidates1 = { 2, 3, 6, 7 };
+        int[] candidates2 = { 2, 3, 6, 7, 11, 14, 20, 28, 45, 62 };
+        int[] candidates3 = { 2, 3, 4, 9, 12 };
 
-        System.out.println(cs.combinationSum(candidates, 7));
+        System.out.println(cs.combinationSum(candidates1, 1));
+        System.out.println(cs.combinationSum(candidates1, 5));
+        System.out.println(cs.combinationSum(candidates1, 7));
+        System.out.println(cs.combinationSum(candidates2, 28));
+        System.out.println(cs.combinationSum(candidates2, 29));
+        System.out.println(cs.combinationSum(candidates3, 12));
     }
 }
