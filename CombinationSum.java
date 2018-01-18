@@ -47,10 +47,10 @@ How to make this faster, use dynamic programming, and save the solutions as we f
 */
 
 public class CombinationSum {
-    private List<List<Integer>> comboSumHelper(Map<Integer, List<List<Integer>>> memory, int[] candidates, int target) {
+    private List<List<Integer>> comboSumHelper(Map<Integer,List<List<Integer>>> memory,
+                                               Map<Integer,Boolean> alreadyUsed,
+                                               int[] candidates, int target) {
         List<List<Integer>> result = memory.get(target);
-        Map<Integer,Boolean> usedThisTime = new HashMap<Integer,Boolean>();
-
         if (result == null) {
             result = new ArrayList<List<Integer>>();
             for (int i = 0; i < candidates.length; i++) {
@@ -61,16 +61,12 @@ public class CombinationSum {
                     l.add(candi);
                     result.add(l);
                 }
-                else if (candi > target || usedThisTime.containsKey(candi)) {
+                else if (candi > target) {
                     // do nothing, eliminates some extra work and the re-use of some combos
                 }
                 else {
-                    // make sure we don't re-use (later in this loop) any of the numbers we've already tried,
-                    // and this will eliminate duplicates
-                    usedThisTime.put(candi, true);
-
                     // when less than the target, use this number and grab sub-solutions on a smaller target
-                    List<List<Integer>> sublist = comboSumHelper(memory, candidates, target - candi);
+                    List<List<Integer>> sublist = comboSumHelper(memory, alreadyUsed, candidates, target - candi);
                     for (int j = 0; j < sublist.size(); j++) {
                         List<Integer> subsolution = sublist.get(j);
                         List<Integer> additionalResult = new ArrayList<Integer>();
@@ -78,6 +74,10 @@ public class CombinationSum {
                         additionalResult.addAll(subsolution);
                         result.add(additionalResult);
                     }
+
+                    // make sure we don't re-use (later in this loop) any of the numbers we've already tried,
+                    // and this will eliminate duplicates
+                    alreadyUsed.put(candi, true);
                 }
             }
             memory.put(target, result);
@@ -87,7 +87,8 @@ public class CombinationSum {
 
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         Map<Integer,List<List<Integer>>> memory = new HashMap<Integer,List<List<Integer>>>();
-        return comboSumHelper(memory, candidates, target);
+        Map<Integer,Boolean> alreadyUsed = new HashMap<Integer,Boolean>();
+        return comboSumHelper(memory, alreadyUsed, candidates, target);
     }
 
     public static void main(String[] arg) {
