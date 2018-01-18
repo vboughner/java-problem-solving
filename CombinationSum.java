@@ -49,11 +49,11 @@ How to make this faster, use dynamic programming, and save the solutions as we f
 public class CombinationSum {
     private List<List<Integer>> comboSumHelper(Map<Integer,List<List<Integer>>> memory,
                                                Map<Integer,Boolean> alreadyUsed,
-                                               int[] candidates, int target) {
+                                               int[] candidates, int validCandidateStartIndex, int target) {
         List<List<Integer>> result = memory.get(target);
         if (result == null) {
             result = new ArrayList<List<Integer>>();
-            for (int i = 0; i < candidates.length; i++) {
+            for (int i = validCandidateStartIndex; i < candidates.length; i++) {
                 int candi = candidates[i];
                 if (candi == target) {
                     // add this single number to the results, it is alone
@@ -66,7 +66,7 @@ public class CombinationSum {
                 }
                 else {
                     // when less than the target, use this number and grab sub-solutions on a smaller target
-                    List<List<Integer>> sublist = comboSumHelper(memory, alreadyUsed, candidates, target - candi);
+                    List<List<Integer>> sublist = comboSumHelper(memory, alreadyUsed, candidates, i,target - candi);
                     for (int j = 0; j < sublist.size(); j++) {
                         List<Integer> subsolution = sublist.get(j);
                         List<Integer> additionalResult = new ArrayList<Integer>();
@@ -88,7 +88,7 @@ public class CombinationSum {
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         Map<Integer,List<List<Integer>>> memory = new HashMap<Integer,List<List<Integer>>>();
         Map<Integer,Boolean> alreadyUsed = new HashMap<Integer,Boolean>();
-        return comboSumHelper(memory, alreadyUsed, candidates, target);
+        return comboSumHelper(memory, alreadyUsed, candidates, 0, target);
     }
 
     public static void main(String[] arg) {
