@@ -50,6 +50,7 @@ public class CombinationSum {
     private List<List<Integer>> comboSumHelper(Map<Integer,List<List<Integer>>> memory,
                                                Map<Integer,Boolean> alreadyUsed,
                                                int[] candidates, int validCandidateStartIndex, int target) {
+        // System.out.println("target=" + target + " getting started with validStartIndex=" + validCandidateStartIndex);
         List<List<Integer>> result = memory.get(target);
         if (result == null) {
             result = new ArrayList<List<Integer>>();
@@ -60,6 +61,7 @@ public class CombinationSum {
                     List<Integer> l = new ArrayList<Integer>();
                     l.add(candi);
                     result.add(l);
+                    // System.out.println("target=" + target + " added a single number to the result: " + candi);
                 }
                 else if (candi > target) {
                     // do nothing, eliminates some extra work and the re-use of some combos
@@ -78,9 +80,11 @@ public class CombinationSum {
                     // make sure we don't re-use (later in this loop) any of the numbers we've already tried,
                     // and this will eliminate duplicates
                     alreadyUsed.put(candi, true);
+                    // System.out.println("target=" + target + " put already used flag on " + candi);
                 }
             }
-            memory.put(target, result);
+            // memory.put(target, result);
+            // System.out.println("target=" + target + " put result for target of " + result);
         }
         return result;
     }
@@ -99,6 +103,7 @@ public class CombinationSum {
 
         System.out.println(cs.combinationSum(candidates1, 1));
         System.out.println(cs.combinationSum(candidates1, 5));
+        System.out.println(cs.combinationSum(candidates1, 8));
         System.out.println(cs.combinationSum(candidates1, 7));
         System.out.println(cs.combinationSum(candidates2, 28));
         System.out.println(cs.combinationSum(candidates2, 29));
