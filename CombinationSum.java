@@ -47,52 +47,38 @@ How to make this faster, use dynamic programming, and save the solutions as we f
 */
 
 public class CombinationSum {
-    private List<List<Integer>> comboSumHelper(Map<Integer,List<List<Integer>>> memory,
-                                               Map<Integer,Boolean> alreadyUsed,
-                                               int[] candidates, int validCandidateStartIndex, int target) {
-        // System.out.println("target=" + target + " getting started with validStartIndex=" + validCandidateStartIndex);
-        List<List<Integer>> result = memory.get(target);
-        if (result == null) {
-            result = new ArrayList<List<Integer>>();
-            for (int i = validCandidateStartIndex; i < candidates.length; i++) {
-                int candi = candidates[i];
-                if (candi == target) {
-                    // add this single number to the results, it is alone
-                    List<Integer> l = new ArrayList<Integer>();
-                    l.add(candi);
-                    result.add(l);
-                    // System.out.println("target=" + target + " added a single number to the result: " + candi);
-                }
-                else if (candi > target) {
-                    // do nothing, eliminates some extra work and the re-use of some combos
-                }
-                else {
-                    // when less than the target, use this number and grab sub-solutions on a smaller target
-                    List<List<Integer>> sublist = comboSumHelper(memory, alreadyUsed, candidates, i,target - candi);
-                    for (int j = 0; j < sublist.size(); j++) {
-                        List<Integer> subsolution = sublist.get(j);
-                        List<Integer> additionalResult = new ArrayList<Integer>();
-                        additionalResult.add(candi);
-                        additionalResult.addAll(subsolution);
-                        result.add(additionalResult);
-                    }
 
-                    // make sure we don't re-use (later in this loop) any of the numbers we've already tried,
-                    // and this will eliminate duplicates
-                    alreadyUsed.put(candi, true);
-                    // System.out.println("target=" + target + " put already used flag on " + candi);
+    private List<List<Integer>> comboSumHelper(int[] candidates, int validCandidateStartIndex, int target) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        // limit the use of previous indexes in candidate, in order to avoid duplication
+        for (int i = validCandidateStartIndex; i < candidates.length; i++) {
+            int candi = candidates[i];
+            if (candi == target) {
+                // add this single number to the results, it is a solution all by itself
+                List<Integer> l = new ArrayList<Integer>();
+                l.add(candi);
+                result.add(l);
+            }
+            else if (candi > target) {
+                // do nothing, cannot use numbers bigger than target at all
+            }
+            else {
+                // when less than the target, use this number with all the sub-solutions on a smaller target
+                List<List<Integer>> sublist = comboSumHelper(candidates, i,target - candi);
+                for (int j = 0; j < sublist.size(); j++) {
+                    List<Integer> subsolution = sublist.get(j);
+                    List<Integer> additionalResult = new ArrayList<Integer>();
+                    additionalResult.add(candi);
+                    additionalResult.addAll(subsolution);
+                    result.add(additionalResult);
                 }
             }
-            // memory.put(target, result);
-            // System.out.println("target=" + target + " put result for target of " + result);
         }
         return result;
     }
 
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        Map<Integer,List<List<Integer>>> memory = new HashMap<Integer,List<List<Integer>>>();
-        Map<Integer,Boolean> alreadyUsed = new HashMap<Integer,Boolean>();
-        return comboSumHelper(memory, alreadyUsed, candidates, 0, target);
+        return comboSumHelper(candidates, 0, target);
     }
 
     public static void main(String[] arg) {
