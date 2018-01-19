@@ -37,7 +37,7 @@ class Chopstick {
     }
 }
 
-public class Philosopher extends Thread {
+public class Philosopher implements Runnable {
     private int bites = 10;
     private Chopstick lower, higher;
     private int id;
@@ -100,7 +100,7 @@ public class Philosopher extends Thread {
         }
 
         for (int i = 0; i < numPhilosophers; i++) {
-            philosophers.get(i).start();
+            (new Thread(philosophers.get(i))).start();
         }
 
         System.out.println("done starting threads");
