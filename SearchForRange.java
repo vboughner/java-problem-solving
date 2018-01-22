@@ -67,21 +67,35 @@ public class SearchForRange {
     // returns the leftmost instance of a number in the range given, returns rightIndex
     // if the number is not found anywhere else in the range (rightIndex is assumed to be the target)
     public int findLeftEdgeForIndex(int[] nums, int leftIndex, int rightIndex, int target) {
-        for (int i = rightIndex - 1; i >= leftIndex; i--) {
-            if (nums[i] != target) {
-                return i + 1;
+        int leftEdgeIndex = rightIndex;
+
+        do {
+            int expandIndex = findAnIndexForNumber(nums, leftIndex, leftEdgeIndex - 1, target);
+            if (expandIndex == -1) {
+                break;
             }
-        }
-        return rightIndex;
+            else {
+                leftEdgeIndex = expandIndex;
+            }
+        } while (true);
+
+        return leftEdgeIndex;
     }
 
     public int findRightEdgeForIndex(int[] nums, int leftIndex, int rightIndex, int target) {
-        for (int i = leftIndex + 1; i <= rightIndex; i++) {
-            if (nums[i] != target) {
-                return i - 1;
+        int rightEdgeIndex = leftIndex;
+
+        do {
+            int expandIndex = findAnIndexForNumber(nums, rightEdgeIndex + 1, rightIndex, target);
+            if (expandIndex == -1) {
+                break;
             }
-        }
-        return leftIndex;
+            else {
+                rightEdgeIndex = expandIndex;
+            }
+        } while (true);
+
+        return rightEdgeIndex;
     }
 
     public int[] searchRange(int[] nums, int target) {
