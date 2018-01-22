@@ -101,22 +101,35 @@ public class SearchForRange {
     public int[] searchRange(int[] nums, int target) {
         int left = 0;
         int right = nums.length - 1;
+        int[] result = { -1, -1 };
 
-        // phase 1
-        int landed = findAnIndexForNumber(nums, left, right, target);
+        if (nums.length > 0) {
+            // phase 1
+            int landed = findAnIndexForNumber(nums, left, right, target);
 
-        // phase 2
-        int leftEdgeIndex = findLeftEdgeForIndex(nums, left, landed, target);
+            // phase 2
+            int leftEdgeIndex = findLeftEdgeForIndex(nums, left, landed, target);
 
-        // phase 3
-        int rightEdgeIndex = findRightEdgeForIndex(nums, landed, right, target);
+            // phase 3
+            int rightEdgeIndex = findRightEdgeForIndex(nums, landed, right, target);
 
-        int[] result = { leftEdgeIndex, rightEdgeIndex };
+            result[0] = leftEdgeIndex;
+            result[1] = rightEdgeIndex;
+        }
+
         return result;
     }
 
     public static void main(String[] args) {
         SearchForRange sfr = new SearchForRange();
+
+        int[] case0 = {};
+        int[] result0 = sfr.searchRange(case0, 8);
+        int[] expected0 = { -1, -1 };
+
+        System.out.println("case0 input    is  " + Arrays.toString(case0) + " with target of 8");
+        System.out.println("case0 output   is  " + Arrays.toString(result0));
+        System.out.println("case0 expected is  " + Arrays.toString(expected0));
 
         int[] case1 = { 5, 7, 7, 8, 8, 10 };
         int[] result1 = sfr.searchRange(case1, 8);
