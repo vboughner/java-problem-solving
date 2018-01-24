@@ -71,7 +71,7 @@ public class SearchForRange {
 
         do {
             int expandIndex = findAnIndexForNumber(nums, leftIndex, leftEdgeIndex - 1, target);
-            if (expandIndex == -1) {
+            if (expandIndex == -1 || leftEdgeIndex == expandIndex) {
                 break;
             }
             else {
@@ -87,7 +87,7 @@ public class SearchForRange {
 
         do {
             int expandIndex = findAnIndexForNumber(nums, rightEdgeIndex + 1, rightIndex, target);
-            if (expandIndex == -1) {
+            if (expandIndex == -1 || rightEdgeIndex == expandIndex) {
                 break;
             }
             else {
@@ -148,5 +148,21 @@ public class SearchForRange {
         System.out.println("case2 input    is  " + Arrays.toString(case2) + " with target of 8");
         System.out.println("case2 output   is  " + Arrays.toString(result2));
         System.out.println("case2 expected is  " + Arrays.toString(expected2));
+
+        int[] case3 = { 1 };
+        int[] result3 = sfr.searchRange(case3, 1);
+        int[] expected3 = { 0, 0 };
+
+        System.out.println("case3 input    is  " + Arrays.toString(case3) + " with target of 1");
+        System.out.println("case3 output   is  " + Arrays.toString(result3));
+        System.out.println("case3 expected is  " + Arrays.toString(expected3));
+
+        int[] case4 = { 2, 2 };
+        int[] result4 = sfr.searchRange(case4, 2);
+        int[] expected4 = { 0, 1 };
+
+        System.out.println("case4 input    is  " + Arrays.toString(case4) + " with target of 2");
+        System.out.println("case4 output   is  " + Arrays.toString(result4));
+        System.out.println("case4 expected is  " + Arrays.toString(expected4));
     }
 }
