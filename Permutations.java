@@ -65,6 +65,40 @@ public class Permutations {
     }
 
 
+    /*
+     * Another approach to the problem, using back-tracking.
+     *
+     * Algorithm:
+     *   - build up the overall results and pass them along
+     *   - call for the building of each new permutation, adding a single (unused) element to it in this call
+     *   - get the results for that, backtrack and try another
+     *
+     * Note: it turns out this isn't any faster than the other way, just a different style of writing it
+     */
+    public List<List<Integer>> backTrackPermute(int[] nums) {
+        List<List<Integer>> results = new ArrayList<List<Integer>>();
+        if (nums.length > 0) {
+            List<Integer> tempList = new ArrayList<Integer>();
+            backTrackPermuteHelper(results, tempList, nums);
+        }
+        return results;
+    }
+
+    private void backTrackPermuteHelper(List<List<Integer>> results, List<Integer> tempList, int[] nums) {
+        if (tempList.size() == nums.length) {
+            results.add(new ArrayList<Integer>(tempList));
+        }
+        else {
+            for (int i = 0; i < nums.length; i++) {
+                if (!tempList.contains(nums[i])) {
+                    tempList.add(nums[i]);
+                    backTrackPermuteHelper(results, tempList, nums);
+                    tempList.remove(tempList.size() - 1);
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
         Permutations p = new Permutations();
         int[][] cases = {
@@ -87,6 +121,7 @@ public class Permutations {
         for (int i = 0; i < cases.length; i++) {
             System.out.println("case" + i + ": solution for " + Arrays.toString(cases[i]) + " is");
             System.out.println("      " + p.permute(cases[i]));
+            System.out.println("      " + p.backTrackPermute(cases[i]));
             System.out.println();
         }
     }
