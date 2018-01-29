@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -34,7 +35,33 @@ Algorithm:
 public class Permutations {
 
     public List<List<Integer>> permute(int[] nums) {
-        return null;
+        List<List<Integer>> results = new ArrayList<List<Integer>>();
+        if (nums.length > 0) {
+            if (nums.length == 1) {
+                List<Integer> l = new ArrayList<Integer>();
+                l.add(nums[0]);
+                results.add(l);
+            }
+            else {
+                for (int i = 0; i < nums.length; i++) {
+                    int[] modifiedNums = new int[nums.length - 1];
+                    if (i > 0) {
+                        System.arraycopy(nums, 0, modifiedNums, 0, i);
+                    }
+                    if (i < nums.length - 1) {
+                        System.arraycopy(nums, i + 1, modifiedNums, i, nums.length - i - 1);
+                    }
+                    List<List<Integer>> subsolutions = permute(modifiedNums);
+                    for (int j = 0; j < subsolutions.size(); j++) {
+                        List<Integer> l = new ArrayList<Integer>();
+                        l.add(nums[i]);
+                        l.addAll(subsolutions.get(j));
+                        results.add(l);
+                    }
+                }
+            }
+        }
+        return results;
     }
 
 
