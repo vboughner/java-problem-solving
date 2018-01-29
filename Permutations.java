@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedList;
 
 /*
 
@@ -99,6 +100,27 @@ public class Permutations {
         }
     }
 
+    /*
+     * Faster way, using a queue and iteration, from the solution in the discussion at
+     * https://leetcode.com/problems/permutations/discuss/18255
+     */
+    public List<List<Integer>> queuePermute(int[] num) {
+        LinkedList<List<Integer>> res = new LinkedList<List<Integer>>();
+        res.add(new ArrayList<Integer>());
+        for (int n : num) {
+            int size = res.size();
+            for (; size > 0; size--) {
+                List<Integer> r = res.pollFirst();
+                for (int i = 0; i <= r.size(); i++) {
+                    List<Integer> t = new ArrayList<Integer>(r);
+                    t.add(i, n);
+                    res.add(t);
+                }
+            }
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
         Permutations p = new Permutations();
         int[][] cases = {
@@ -122,6 +144,7 @@ public class Permutations {
             System.out.println("case" + i + ": solution for " + Arrays.toString(cases[i]) + " is");
             System.out.println("      " + p.permute(cases[i]));
             System.out.println("      " + p.backTrackPermute(cases[i]));
+            System.out.println("      " + p.queuePermute(cases[i]));
             System.out.println();
         }
     }
