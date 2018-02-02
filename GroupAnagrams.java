@@ -28,10 +28,10 @@ Notes:
 class GroupAnagrams {
     public List<List<String>> groupAnagrams(String[] strs) {
         Map<Integer,List<String>> anagramList = new HashMap<Integer,List<String>>();
-        List<List<String>> result = new ArrayList<List<String>>();
         int len = strs.length;
         for (int i = 0; i < len; i++) {
             int[] counters = new int[26];
+            Arrays.fill(counters, 0);
             int clen = strs[i].length();
             for (int c = 0; c < clen; c++) {
                 counters[strs[i].charAt(c) - 'a']++;
@@ -42,12 +42,11 @@ class GroupAnagrams {
             if (list == null) {
                 list = new ArrayList<String>();
                 anagramList.put(hash, list);
-                result.add(list);
             }
             list.add(strs[i]);
         }
 
-        return result;
+        return new ArrayList(anagramList.values());
     }
 
     public static void main(String[] args) {
