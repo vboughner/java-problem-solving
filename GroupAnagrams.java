@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,13 +31,13 @@ class GroupAnagrams {
         List<List<String>> result = new ArrayList<List<String>>();
         int len = strs.length;
         for (int i = 0; i < len; i++) {
-            int hash = 0;
+            int[] counters = new int[26];
             int clen = strs[i].length();
             for (int c = 0; c < clen; c++) {
-                int bitnum = strs[i].charAt(c) - 'a';
-                hash |= 1 << bitnum;
+                counters[strs[i].charAt(c) - 'a']++;
             }
 
+            int hash = Arrays.hashCode(counters);
             List<String> list = anagramList.get(hash);
             if (list == null) {
                 list = new ArrayList<String>();
